@@ -16,13 +16,74 @@
 
 #include "Game.h"
 
+Game* g_game = nullptr;
+
+
+int FrameMove()
+{
+    static auto lastTime = g2_TimeGetTime();
+
+    auto currentTime = g2_TimeGetTime();
+
+    float deltaTime =
+        (currentTime - lastTime) / 1000.0f;
+
+    lastTime = currentTime;
+
+    if (g_game)
+        g_game->Update(deltaTime);
+
+    return 0;
+}
+
+
+int RenderFrame()
+{
+    if (g_game)
+        g_game->Render();
+
+    return 0;
+}
+
 int main()
 {
-	Game game;
+    
+    if (g2_InitSdk() < 0)
+        return -1;
 
-	game.Init();
+    
+    Game game;
+    g_game = &game;
 
-	game.Render();
+    
+    g2_SetFrameMove(FrameMove);
+    g2_SetRender(RenderFrame);
 
-	return 0;
+    
+    g2_SetClearColor(0xFF000020);
+
+    
+    if (g2_CreateWin(
+        100, 100,
+        800, 600,
+        "Galaga",
+        true, 1.0f) < 0)
+    {
+        g_game = nullptr;
+        return -2;
+    }
+
+    
+    game.Init();
+
+    
+    g2_Run();
+
+    
+    game.Release();
+    g_game = nullptr;
+
+    g2_DestroyWin();
+
+    return 0;
 }
