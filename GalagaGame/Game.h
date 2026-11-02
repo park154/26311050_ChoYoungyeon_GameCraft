@@ -29,6 +29,11 @@ private:
    
     int m_playerTex = -1;
 
+    int m_titleFont = -1;
+    int m_guideFont = -1;
+
+    int m_backgroundTex = -1;
+
 public:
     Game();
     ~Game();
