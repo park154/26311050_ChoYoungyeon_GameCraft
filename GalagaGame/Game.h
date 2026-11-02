@@ -26,6 +26,9 @@ private:
     int m_score = 0;
     int m_stage = 1;
 
+   
+    int m_playerTex = -1;
+
 public:
     Game();
     ~Game();
