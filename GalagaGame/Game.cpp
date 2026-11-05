@@ -11,16 +11,17 @@ Game::~Game()
 
 void Game::Init()
 {
-    
+    Player m_player;
+
     m_state = GameState::Title;
 
     
     m_titleFont = g2_FontCreate("Arial", 56);
     m_guideFont = g2_FontCreate("Arial", 26);
 
-    m_backgroundTex = g2_TextureLoad("resource/background.png", 0);
+    m_playerTex = g2_TextureLoad("..\\resource\\player.png", 0);
 
-    m_playerTex = g2_TextureLoad("resource/player.png", 0);
+    m_backgroundTex = g2_TextureLoad("..\\resource\\background.png", 0);
 
 }
 
@@ -41,6 +42,7 @@ void Game::Update(float deltaTime)
 
     case GameState::Playing:
         
+        m_player.Update(deltaTime);
         break;
 
     case GameState::GameOver:
@@ -86,10 +88,15 @@ void Game::Render()
 
     case GameState::Playing:
     {
+        
         if (m_backgroundTex != -1)
         {
             VEC2 position(0.0f, 0.0f);
-            VEC2 scale(1.0f, 1.0f);
+
+            VEC2 scale(
+                947.0f / g2_TextureWidth(m_backgroundTex),
+                1672.0f / g2_TextureHeight(m_backgroundTex)
+            );
 
             g2_Draw2D(
                 m_backgroundTex,
@@ -97,21 +104,11 @@ void Game::Render()
                 &position,
                 &scale
             );
-
         }
+
         
-        if (m_playerTex != -1)
-        {
-            VEC2 position(250.0f, 350.0f);
-            VEC2 scale(0.05f, 0.05f);
+        m_player.Render();
 
-            g2_Draw2D(
-                m_playerTex,
-                nullptr,
-                &position,
-                &scale
-            );
-        }
         break;
     }
 
@@ -137,4 +134,6 @@ void Game::Release()
         g2_TextureRelease(m_playerTex);
         m_playerTex = -1;
     }
+
+    m_player.Release();
 }
